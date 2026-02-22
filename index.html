@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ksheera – Birthday</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: black;
+    color: white;
+    text-align: center;
+    overflow-x: hidden;
+}
+
+/* INTRO SCREEN */
+#introScreen {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 999;
+    cursor: pointer;
+}
+#introScreen h1 { font-size: 2em; opacity: 0.8; letter-spacing: 3px; }
+
+/* PASSWORD SCREEN */
+#passwordScreen {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+input { padding: 12px; border-radius: 25px; border: none; margin-top: 15px; }
+button {
+    padding: 12px 25px;
+    border-radius: 25px;
+    border: none;
+    background: white;
+    color: black;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+button:hover { transform: scale(1.1); }
+
+/* MAIN CONTENT */
+#mainContent { display: none; padding: 40px 20px; }
+.glow { font-size: 3.5em; animation: glow 2s infinite alternate; }
+@keyframes glow { from { text-shadow: 0 0 10px #fff; } to { text-shadow: 0 0 40px #fff; } }
+
+/* Stars */
+.star { position: fixed; width: 2px; height: 2px; background: white; animation: moveStar linear infinite; }
+@keyframes moveStar { from { transform: translateY(0); } to { transform: translateY(100vh); } }
+
+/* Timeline */
+.timeline { max-width: 600px; margin: 40px auto; text-align: left; }
+.timeline-item { margin-bottom: 25px; border-left: 3px solid white; padding-left: 15px; }
+
+/* Confetti */
+.confetti { position: fixed; width: 8px; height: 8px; background: white; animation: confettiFall 3s linear forwards; }
+@keyframes confettiFall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+
+.section { margin-top: 60px; }
+
+/* Cinematic Dialogues */
+#dialogueSection { margin-top: 60px; min-height: 120px; }
+#specialDialogue { font-size: 1.2em; margin: 20px auto; max-width: 600px; line-height: 1.6; transition: opacity 0.5s ease; opacity: 0; }
+#dialogueControls { margin-top: 15px; }
+
+/* Family Section */
+#familySection {
+    margin-top: 60px;
+    padding: 20px;
+    border: 2px solid white;
+    border-radius: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    background: rgba(255,255,255,0.05);
+}
+#familySection h2 { text-shadow: 0 0 15px #fff; }
+#familySection p { line-height: 1.6; font-size: 1.1em; }
+
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+<source src="hi-nanna.mp3" type="audio/mpeg">
+</audio>
+
+<!-- INTRO -->
+<div id="introScreen" onclick="startMovie()">
+    <h1>Let's Begin a Small Movie</h1>🎬
+    <h1>🎬 Ksheera – The Main Character 🤍</h1>
+    <p>Click Anywhere To Start 🎬</p>
+</div>
+
+<!-- PASSWORD -->
+<div id="passwordScreen">
+    <h2>Only for Ksheera 🤍</h2>
+    <input type="password" id="passwordInput" placeholder="Hint: Where we met 😉">
+    <button onclick="unlock()">Unlock The Movie</button>
+    <p id="error" style="color:red;"></p>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="mainContent">
+
+    <h1 class="glow">Happy Birthday Ksheera 🤍</h1>
+    <h2>🎉 IT'S YOUR DAYYYYY 🎉</h2>
+    <p id="typedMessage"></p>
+
+    <div class="timeline section">
+        <h2>Our Legendary Timeline 😂</h2>
+        <div class="timeline-item">
+            <strong>Pentagon Space Institute 🚀</strong>
+            <p>The beginning of chaos and permanent friendship.</p>
+            <p>The Date: 11-09-2024</p>
+        </div>
+        <div class="timeline-item">
+            <strong>Unlimited Laughing Sessions 🤡</strong>
+            <p>Laughing at nonsense like it’s comedy gold.</p>
+        </div>
+        <div class="timeline-item">
+            <strong>Emotional Plot Twists 🌙</strong>
+            <p>From jokes to deep talks in 3 seconds.</p>
+        </div>
+    </div>
+
+    <!-- Family Section -->
+    <div class="section" id="familySection">
+        <h2>Family – Her Heartbeat 💖</h2>
+        <p>Her mom is her anchor, the first love she cherishes forever. 🤍</p>
+        <p>Her sister? The sidekick, the secret keeper, and her favorite partner-in-crime. 👯‍♀️</p>
+        <p>Family comes first – always her soft spot and strength. 🌟</p>
+    </div>
+
+    <!-- Cinematic Dialogues Section -->
+    <div class="section" id="dialogueSection">
+        <h2>Ksheera Cinematic Dialogues 🎤</h2>
+        <p id="specialDialogue"></p>
+        <div id="dialogueControls">
+            <button onclick="prevDialogue()">⬅️ Previous Scene</button>
+            <button onclick="nextDialogue()">Next Scene ➡️</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <button onclick="finalScene()">Final Scene 🎬</button>
+        <p id="ending" style="margin-top:20px;"></p>
+    </div>
+</div>
+
+<script>
+/* INTRO */
+function startMovie() {
+    document.getElementById("introScreen").style.display = "none";
+    document.getElementById("passwordScreen").style.display = "flex";
+}
+
+/* PASSWORD UNLOCK */
+function unlock() {
+    const pass = document.getElementById("passwordInput").value.toLowerCase();
+    if(pass === "pentagon") {
+        document.getElementById("passwordScreen").style.display = "none";
+        document.getElementById("mainContent").style.display = "block";
+        playMusic();
+        createStars();
+        launchConfetti();
+        startTyping();
+        showDialogue(dialogueIndex);
+    } else {
+        document.getElementById("error").innerText = "Wrong password 👀";
+    }
+}
+
+/* MUSIC */
+function playMusic() {
+    const music = document.getElementById("bgMusic");
+    music.volume = 0;
+    music.play().catch(()=>{});
+    let vol=0;
+    const fade=setInterval(()=>{
+        if(vol<1){vol+=0.05; music.volume=vol;} 
+        else clearInterval(fade);
+    },200);
+}
+
+/* TYPING EFFECT */
+const text = `Ksheera…
+You are the main character.
+From Pentagon Space Institute to forever.
+You are chaos, comfort, comedy, and calm.
+70% funny 20% emotional 10% dramatic overthinker 100% my favorite human.
+Happy Birthday 🤍`;
+
+let i=0;
+function startTyping(){ document.getElementById("typedMessage").innerHTML=""; type();}
+function type(){ if(i<text.length){document.getElementById("typedMessage").innerHTML += text.charAt(i); i++; setTimeout(type,40);} }
+
+/* STARS */
+function createStars(){
+    for(let i=0;i<80;i++){
+        const star=document.createElement("div");
+        star.classList.add("star");
+        star.style.left=Math.random()*100+"vw";
+        star.style.top=Math.random()*100+"vh";
+        star.style.animationDuration=Math.random()*5+5+"s";
+        document.body.appendChild(star);
+    }
+}
+
+/* CONFETTI */
+function launchConfetti(){
+    for(let i=0;i<150;i++){
+        const conf=document.createElement("div");
+        conf.classList.add("confetti");
+        conf.style.left=Math.random()*100+"vw";
+        conf.style.animationDuration=Math.random()*2+2+"s";
+        document.body.appendChild(conf);
+        setTimeout(()=>conf.remove(),3000);
+    }
+}
+
+/* DIALOGUES */
+const dialogues = [
+"\"I am not overthinking. I am just thinking better than you.\" 🤡",
+"\"I don't need drama. Drama needs me.\" 🎭",
+"Pentagon Space Institute survivor and chaos creator. 🚀",
+"Professional overthinker. Certified strong queen. 👑",
+"To her family: thank you for creating this beautiful disaster of a human 🤍",
+"She acts strong… but will cry watching emotional reels at 2AM.",
+"Ksheera is the only person who can roast you and then say 'I care about you' in the same breath.",
+"And behind all the jokes… she has the softest heart.",
+"Wait for local dialogues le😂",
+"Nana irritate madbeda😡",
+"Nan manege hogbeku nange mummy beku🥹",
+"Nadi Manege🚶‍♂️",
+"Avlodhaan😎",
+];
+let dialogueIndex=0;
+const dialogueBox=document.getElementById("specialDialogue");
+function showDialogue(index){
+    dialogueBox.style.opacity=0;
+    setTimeout(()=>{
+        dialogueBox.innerHTML=dialogues[index];
+        dialogueBox.style.opacity=1;
+        if(index===0||index===4) launchConfetti();
+    },300);
+}
+function nextDialogue(){ dialogueIndex=(dialogueIndex+1)%dialogues.length; showDialogue(dialogueIndex);}
+function prevDialogue(){ dialogueIndex=(dialogueIndex-1+dialogues.length)%dialogues.length; showDialogue(dialogueIndex);}
+
+/* FINAL SCENE */
+function finalScene(){
+    document.getElementById("ending").innerHTML = 
+    "No matter where life goes... you will always be my best friend. 🤍🎬 The End.";
+}
+
+</script>
+</body>
+</html>
