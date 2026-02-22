@@ -157,6 +157,18 @@ button:hover { transform: scale(1.1); }
         <button onclick="finalScene()">Final Scene 🎬</button>
         <p id="ending" style="margin-top:20px;"></p>
     </div>
+    
+    <!-- CAKE SECTION -->
+    <div class="section" id="cakeSection" style="display:none;">
+    <h2>🎂 Time to Cut the Cake! 🎉</h2>
+    <img id="cakeImage" src="cake.jpg" alt="Cake" style="width:250px; transition: all 0.5s;">
+    <div style="margin-top:20px;">
+        <button onclick="cutCake()">Cut the Cake 🍰</button>
+    </div>
+    <!-- Message after cutting cake -->
+    <p id="birthdayMessage" style="font-size:1.5em; margin-top:20px; color:rgb(255, 255, 255); display:none;">🎉 Happy Birthday Ksheera! 🎉</p>
+    </div>
+
 </div>
 
 <script>
@@ -259,12 +271,57 @@ function showDialogue(index){
 function nextDialogue(){ dialogueIndex=(dialogueIndex+1)%dialogues.length; showDialogue(dialogueIndex);}
 function prevDialogue(){ dialogueIndex=(dialogueIndex-1+dialogues.length)%dialogues.length; showDialogue(dialogueIndex);}
 
-/* FINAL SCENE */
+// FINAL SCENE SHOWS CAKE
 function finalScene(){
     document.getElementById("ending").innerHTML = 
-    "No matter where life goes... you will always be my best friend. 🤍🎬 The End.";
-}
+        "No matter where life goes... you will always be my best friend. 🤍🎬 The End.";
+    
+    // Show cake section when final scene starts
+    const cakeSection = document.getElementById('cakeSection');
+    cakeSection.style.display = 'block';
+    
+    // Reset cake to uncut
+    const cake = document.getElementById('cakeImage');
+    cake.src = 'cake.jpg';
+    cake.style.transform = 'scale(1)';
 
+    // Hide birthday message if previously shown
+    document.getElementById('birthdayMessage').style.display = 'none';
+}
+  
+function cutCake() {
+    const cake = document.getElementById('cakeImage');
+    cake.src = 'cake_cut.jpg'; // replace with cut cake image
+    cake.style.transform = "scale(1.05)"; // slight pop effect
+
+    // Hide "Time to Cut the Cake" heading
+    document.querySelector('#cakeSection h2').style.display = 'none';
+
+    // Show birthday message
+    document.getElementById('birthdayMessage').style.display = 'block';
+
+    // Add confetti
+    for(let i=0; i<100; i++){
+        const conf=document.createElement('div');
+        conf.classList.add('confetti');
+        conf.style.left = Math.random()*100 + "vw";
+        conf.style.top = "-10px";
+        conf.style.width = conf.style.height = Math.random()*10 + 5 + "px";
+        conf.style.background = "hsl(" + Math.random()*360 + ",100%,50%)";
+        conf.style.position = "fixed";
+        conf.style.opacity = 1;
+        conf.style.borderRadius = "50%";
+        conf.style.animation = `confettiFall ${Math.random()*3 + 2}s linear forwards`;
+        document.body.appendChild(conf);
+        setTimeout(()=> conf.remove(),4000);
+    }
+}
 </script>
+
+<style>
+@keyframes confettiFall {
+    to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+</style>
 </body>
 </html>
